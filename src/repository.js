@@ -5,9 +5,7 @@ module.exports = {
     'getCandidates': () => {
         console.log('Scanning');
         return new Promise((resolve, reject) => {
-            console.log('in promise');
             const dynamoClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-10-08' });
-            console.log('in there');
             dynamoClient.scan({
                 TableName: 'vote-die',
                 ProjectionExpression: "#i, #n, #v",
@@ -18,11 +16,9 @@ module.exports = {
                 }
             }, (err, data) => {
                 if (err) {
-                    console.log(JSON.stringify(err));
                     reject(err);
                     return;
                 }
-                console.log('got data: ' + JSON.stringify(data));
                 if (!data || !data.Items){
                     resolve([]);
                     return;
@@ -43,7 +39,6 @@ module.exports = {
                 }
             }, (err) => {
                 if (err) {
-                    console.log(JSON.stringify(err));
                     reject(err);
                     return;
                 }
@@ -59,7 +54,6 @@ module.exports = {
                 Key: { 'id': candidateId }
             }, (err, data) => {
                 if (err) {
-                    console.log(JSON.stringify(err));
                     reject(err);
                     return;
                 }
@@ -87,7 +81,7 @@ module.exports = {
     'deleteCandidate': (candidateId) => {
         return new Promise((resolve, reject) => {
             const dynamoClient = new AWS.DynamoDB.DocumentClient({ apiVersion: '2012-10-08' });
-            dynamoClient.get({
+            dynamoClient.delete({
                 TableName: 'vote-die',
                 Key: { 'id': candidateId }
             }, (err) => {
